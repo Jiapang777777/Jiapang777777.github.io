@@ -5,7 +5,8 @@ baseurl:
 url: "https://jiapang777777.github.io/"
 date_format: "ordinal"
 title: JiaPang's Blog
-description: "简单的个人博客"
+subtitle: 学习笔记
+description: "简单的个人博客——关于学习笔记的分享"
 keywords: JiaPang,Blog
 timezone: Asia/Shanghai
 encoding: "utf-8"
@@ -59,14 +60,6 @@ email: 10205501403@stu.ecnu.edu.cn
 #    Navigation    #
 # ---------------- #
 navs:
-  -
-    href: /
-    label: 首页
-
-  -
-    href: /categories/
-    label: 学习笔记分类
-
   -
     href: /about/
     label: 关于自己
