@@ -35,11 +35,6 @@ components:
     # 文章字数统计
     word_count:
         enabled: true
-    # 页面右上角，以及「关于」页面的二维码
-    # 修改图片请替换 assets/images/qrcode.jpg
-    qrcode:
-        enabled: true
-        image_alt: 闷骚的程序员
     # 图片灯箱效果功能
     fancybox:
         enabled: false
@@ -56,7 +51,7 @@ highlight_theme: github
 author: Liu Jiafan
 organization: 
 organization_url: 
-github_username: JiaPang
+github_username: JiaPang777777
 location: ShangHai, China
 email: 10205501403@stu.ecnu.edu.cn
 
