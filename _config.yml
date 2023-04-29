@@ -2,18 +2,17 @@
 #   Main Configs   #
 # ---------------- #
 baseurl:
-url: https://mazhuang.org
+url: https://jiapang777777.github.io/
 date_format: "ordinal"
-title: 码志
-subtitle: "公众号：闷骚的程序员"
-description: "马壮的个人博客，公众号：闷骚的程序员"
-keywords: 码志, Zhuang Ma, mzlogin, mazhuang, 闷骚的程序员
+title: JiaPang's Blog
+description: "简单的个人博客"
+keywords:JiaPang,Blog
 timezone: Asia/Shanghai
 encoding: "utf-8"
 # 页面左下角显示的年份
-since: 2015
+since: 2023
 # 源码仓库，请替换成自己的
-repository: mzlogin/mzlogin.github.io
+repository: Jiapang777777/Jiapang777777.github.io
 # 对 css 和 js 资源的 cdn 加速配置
 cdn:
     jsdelivr:
@@ -57,12 +56,12 @@ highlight_theme: github
 # ---------------- #
 #      Author      #
 # ---------------- #
-author: Zhuang Ma
+author: Liu Jiafan
 organization: 
 organization_url: 
 github_username: mzlogin
-location: Wuhan, China
-email: chumpma@gmail.com
+location: ShangHai, China
+email: 10205501403@stu.ecnu.edu.cn
 
 # ---------------- #
 #    Navigation    #
