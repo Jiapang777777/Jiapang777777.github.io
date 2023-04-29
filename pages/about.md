@@ -10,11 +10,17 @@ permalink: /about/
 欢迎👏大家来看我的博客
 
 我是来着ECNU大三的一名学生 平时超级超级喜欢拍照和美食哈哈哈哈
+
 ![oom killed pod](/images/blog/截屏2023-04-29 21.00.31.png)
+
 ![oom killed pod](/images/blog/截屏2023-04-29 21.00.42.png)
+
 ![oom killed pod](/images/blog/截屏2023-04-29 21.00.53.png)
+
 ![oom killed pod](/images/blog/截屏2023-04-29 21.01.15.png)
+
 ![oom killed pod](/images/blog/截屏2023-04-29 21.01.33.png)
+
 ![oom killed pod](/images/blog/截屏2023-04-29 21.01.45.png)
 
 
