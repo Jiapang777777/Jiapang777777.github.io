@@ -18,7 +18,12 @@ layout: default
             <span class="octicon octicon-calendar"></span> {{ page.date | date: "%Y/%m/%d" }}
           </span>
           {% endif %}
-          
+          {% for cat in page.categories %}
+          <span class="meta-info">
+            <span class="octicon octicon-file-directory"></span>
+            <a href="{{ site.url }}/categories/#{{ cat }}" title="{{ cat }}">{{ cat }}</a>
+          </span>
+          {% endfor %}
           {% if site.components.word_count.enabled %}
           <span class="meta-info">
             <span class="octicon octicon-clock"></span>
@@ -45,10 +50,17 @@ layout: default
     {{ content }}
     {% include copyright.html %}
     </article>
- 
+    <div class="share">
+      {% include sns-share.html %}
+    </div>
+    {% include content-footer-ad.html %}
+    <div class="comment">
+      {% include comments.html %}
+    </div>
   </div>
   <div class="column one-fourth">
     {% include sidebar-search.html %}
+   
   </div>
 </div>
 </section>
