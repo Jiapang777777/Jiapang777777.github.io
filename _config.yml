@@ -13,6 +13,8 @@ encoding: "utf-8"
 since: 2023
 # 源码仓库，请替换成自己的
 repository: Jiapang777777/Jiapang777777.github.io
+favicon : 'assets/截屏2023-04-29 21.24.32.png'
+
 # 对 css 和 js 资源的 cdn 加速配置
 cdn:
     jsdelivr:
