@@ -80,7 +80,6 @@ lsi: false
 quiet: false
 excerpt_separator: "\n\n"
 permalink: /:year/:month/:day/:title/
-remote_theme: kitian616/jekyll-TeXt-theme
 plugins:
     - jekyll-github-metadata
     - rouge
@@ -89,7 +88,6 @@ plugins:
     - jekyll-sitemap
     - jekyll-feed
     - jemoji
-    - jekyll-remote-theme # 添加这一行
 #     - jekyll-mentions
 collections:
     wiki:
