@@ -1,0 +1,201 @@
+---
+layout: post
+title: 二叉搜索树和红黑树
+categories: [Java]
+description: 两个有关线程池的小问题记录。
+keywords: c++
+---
+# 上机实践报告
+
+## 一、目的
+
+1．熟悉算法设计的基本思想
+
+2．掌握二叉搜索树和红黑树的简单应用
+
+## 二、内容与设计思想
+
+1. 编写二叉搜索树和红黑树，完成编程练习[oj | 《算法设计与分析》第三次实验课](http://47.100.233.213/contest/85/problems)
+
+2. 画图分别描述不同规模情况下不同算法的运行时间差异； 
+
+注意1：==由于平台的缘故，可能会有 30ms 的波动；解决办法是多提交几次（比如 5 次）取平均数。==
+
+注意2：
+
+> 测试点1：只有这个页面已经给出的样例
+>
+> 测试点2：只有117个查询，并且每个查询就是一个完整的场馆名称。
+>
+> 测试点3-13：由5000~25000个查询（步长是2000），实验报告画图基于这些测试点来设计。（不一定每次都是上升的，请通过多次提交取平均的方式统计）
+
+## 三、使用环境
+
+推荐使用 C/C++集成编译环境。
+
+## 四、实验过程
+
+二叉搜索树的源代码
+
+```c++
+#include <bits/stdc++.h>
+using namespace std;
+
+enum Error_code
+{
+    not_present,
+    success
+};
+struct node
+{
+    vector<string> value;
+    node *left;
+    node *right;
+};
+
+vector<string> split(const string &raw, const char &delim)
+{
+    vector<string> vec;
+    stringstream ss(raw); ////将raw复制到ss
+    static string si;
+    while (getline(ss, si, delim))
+    {
+        vec.push_back(si);
+    }
+    return vec;
+}
+
+Error_code search_and_insert(node *&sub_root, const vector<string> &new_data)
+{
+    if (sub_root == NULL)
+    {
+        sub_root = new node(); //新的结点放到空的位置
+        sub_root->value = new_data;
+        return success;
+    }
+    else if (new_data[2].compare(sub_root->value[2]) < 0) //左孩子字典序小
+        return search_and_insert(sub_root->left, new_data);
+    else if (new_data[2].compare(sub_root->value[2]) > 0)
+        return search_and_insert(sub_root->right, new_data);
+    else
+        return not_present;
+}
+
+void recursive_inorder(node *sub_root, string target, vector<vector<string> > &vec, int &flag) //这是中序输出
+{
+    if (sub_root != NULL)
+    {
+        int positon = sub_root->value[2].find(target);
+        if (positon == 0) //因为必须要是前缀
+        {
+            flag++;
+        }
+        recursive_inorder(sub_root->left, target, vec, flag);
+        if (positon == 0)
+        {
+            vec.push_back(sub_root->value);
+        }
+        recursive_inorder(sub_root->right, target, vec, flag);
+    }
+}
+
+void shuchu(vector<vector<string> > vec, int flag)
+{
+    if (flag == 0)
+        return;
+    for (int i = 0; i < flag - 1; i++)
+    {
+        cout << "{";
+        cout << '"' << "序号" << '"' << ':' << '"' << vec[i][0] << '"';
+        cout << ",";
+        cout << '"' << "区县" << '"' << ':' << '"' << vec[i][1] << '"';
+        cout << ",";
+        cout << '"' << "场馆名称" << '"' << ':' << '"' << vec[i][2] << '"';
+        cout << ",";
+        cout << '"' << "地址" << '"' << ':' << '"' << vec[i][3] << '"';
+        cout << ",";
+        cout << '"' << "联系电话" << '"' << ':' << '"' << vec[i][4] << '"';
+        cout << ",";
+        cout << '"' << "开放时间" << '"' << ':' << '"' << vec[i][5] << '"';
+        cout << ",";
+        cout << '"' << "收费标准" << '"' << ':' << '"' << vec[i][6] << '"';
+        cout << "}"
+             << ",";
+    }
+    cout << "{";
+    cout << '"' << "序号" << '"' << ':' << '"' << vec[flag - 1][0] << '"';
+    cout << ",";
+    cout << '"' << "区县" << '"' << ':' << '"' << vec[flag - 1][1] << '"';
+    cout << ",";
+    cout << '"' << "场馆名称" << '"' << ':' << '"' << vec[flag - 1][2] << '"';
+    cout << ",";
+    cout << '"' << "地址" << '"' << ':' << '"' << vec[flag - 1][3] << '"';
+    cout << ",";
+    cout << '"' << "联系电话" << '"' << ':' << '"' << vec[flag - 1][4] << '"';
+    cout << ",";
+    cout << '"' << "开放时间" << '"' << ':' << '"' << vec[flag - 1][5] << '"';
+    cout << ",";
+    cout << '"' << "收费标准" << '"' << ':' << '"' << vec[flag - 1][6] << '"';
+    cout << "}";
+}
+
+int main()
+{
+    ios::sync_with_stdio(false); //关同步，提高cin / cout效率
+    int N;
+    cin >> N;
+    //这是在读取换行符
+    //char a;
+    //a = getchar();
+    cin.get();
+    //先输入一行
+    vector<string> vec;
+    string str = "";
+    getline(cin, str);
+    vec = split(str, ',');
+    //先建一个根节点
+    node *root = new node;
+    root->value = vec;
+    root->right = NULL;
+    root->left = NULL;
+    vec.clear(); //清空
+    //建树——不停地插入
+    for (int i = 1; i < N; i++)
+    {
+        string str = "";
+        getline(cin, str);
+        vec = split(str, ',');
+        search_and_insert(root, vec);
+        vec.clear(); //清空
+    }
+    //查找个数
+    int M;
+    cin >> M;
+    vector<string> target(M + 1);
+    for (int i = 0; i < M; i++)
+    {
+        cin >> target[i];
+    }
+    
+    for (int i = 0; i < M; i++)
+    {
+        vector<vector<string> > vec;
+        cout << "[";
+        int flag = 0;
+        //递归找出符合条件的存入vec中和记录下flag方便打印出
+        recursive_inorder(root, target[i], vec, flag);
+        shuchu(vec, flag);
+        cout << "]" << endl;
+    }
+    return 0;
+}
+```
+
+
+
+## 五、总结
+
+​        关于这次实验可谓是经历了千辛万苦，从读取到建树再到查找输出！问题一：在一开始输入便一直出错，先读完N后，接着用getline一行一行读字符串就会有问题，因为有一个换行符！所以得在其之间有一个步骤是读取换行符。问题二：输出格式有问题，不能使所输出的最后一个字段没有逗号，在助教的建议下，使用一个flag来做记号即可以解决。问题三：在寻找符合要求的字符串时，不是只输出了前缀包含的，而是输出的只要整个字符串中任何含有即可，这是自己未读清楚题目。问题四：当以上问题都解决后，虽然在本地输出没有问题，但是在vscode上一直runtime error，是因为自己关了同步，却将getchar和cin混用，因为getchar和cin在关同步以后的混用行为编译器是不保证的，同步就是保证getchar和cin同步读取输入，所以出现了问题。
+
+​       自己写好后，又看了下运行时间很短的同学写的代码，发现他们是直接调用库来建树的，而且使用库中的一些函数确实简便了很多运算，这说明自己其实对STL map还不熟悉。感觉经过这次实验学习，对很多地方的知识点又有了进一步的认识。
+  
