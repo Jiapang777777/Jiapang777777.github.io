@@ -25,17 +25,15 @@ keywords: Strassen’s algorithm，优化
 
 5. 改进后的算法与 2 中的算法在相同数据规模下进行比较。
 
-为便于同学操作，我们设置了课程编程题在 [oj | 《算法设计与分析》第二次实验课](http://47.100.233.213/contest/84)，同学可以提交算法代码到这个平台去计算和比较时间。
 
-注意 1：==每组样例有对应的执行次数，如果需要得到单次时间，要除以重复数。==
 
-注意 2：==由于平台的缘故，可能会有 30ms 的波动；解决办法是多提交几次（比如 5 此）取平均数。==
+注意 1：每组样例有对应的执行次数，如果需要得到单次时间，要除以重复数。
+
+注意 2：由于平台的缘故，可能会有 30ms 的波动；解决办法是多提交几次（比如 5 此）取平均数。
 
 ## 三、使用环境
 
 推荐使用 C/C++集成编译环境。
-
-考虑到本文档是 markdown 文档，强烈建议使用 [Typora](https://typora.io/) 可视化编辑。并且使用 VS Code 中的，[Prettier](https://prettier.io/) 插件精致地格式化本文档。
 
 ## 四、实验过程
 
@@ -533,8 +531,8 @@ keywords: Strassen’s algorithm，优化
 2. _分别画出各个实验结果的折线图_
 
    ***规模为2的幂时的情况***
-
-   <img src="https://github.com/Jiapang777777/Jiapang777777.github.io/tree/master/images/blog/截屏2023-04-29 19.21.04.png" style="zoom:60%;" />
+   
+   ![oom killed pod](/images/blog/截屏2023-04-29 19.21.04.png)
 
    | 数据规模 | nomal  algorithm (t/ms) | Strassen’s  algorithm (t/ms) |
    | :------: | :---------------------: | :--------------------------: |
@@ -546,9 +544,7 @@ keywords: Strassen’s algorithm，优化
    ------
 
    这里改进主要是指对Strassen算法的优化
-
-   <img src="https://github.com/Jiapang777777/Jiapang777777.github.io/tree/master/images/blog/截屏2023-04-29 19.21.08.png" style="zoom:60%;" />
-
+  ![oom killed pod](/images/blog/截屏2023-04-29 19.21.08.png)
    
 
    | 数据规模 | 改进前 | 改进后 |
@@ -563,8 +559,9 @@ keywords: Strassen’s algorithm，优化
    
 
    ***当规模不为2的幂时的情况***
+   
+   ![oom killed pod](/images/blog/截屏2023-04-29 19.21.17.png)
 
-   <img src="https://github.com/Jiapang777777/Jiapang777777.github.io/tree/master/images/blog/截屏2023-04-29 19.21.17.png"  style="zoom:60%;" />
 
    | 数据规模 | nomal  algorithm (t/ms) | Strassen’s  algorithm (t/ms) |
    | :------: | :---------------------: | :--------------------------: |
