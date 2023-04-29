@@ -1,184 +1,596 @@
 ---
 layout: post
-title: 读书：哲学家们都干了些什么
+title: Strassen’s algorithm
 categories: [Blog]
-description: 《哲学家们都干了些什么》读书笔记
-keywords: 读书笔记, 哲学家们都干了些什么
+description: Strassen算法优化报告
+keywords: Strassen’s algorithm，优化
 ---
+# 上机实践报告
 
-<img src="/images/blog/zhexuejiamendouganlexieshenme.jpg" width="240px" />
+## 一、目的
 
-> 哲学本质上是人理解人、人认识人的理性活动，是对世界基本和普遍之问题研究的学科，是关于世界观的理论体系。——百度百科
+1．熟悉算法设计的基本思想
 
-这本书应该是想用不那么严肃的方式串起整个哲学史，可能有一些地方不那么详实和严谨，但对于我这样的小白来讲算是不错的入门读物。
+2．掌握 Strassen 算法的基本思想，并且能够分析算法性能
 
-## 开篇
+## 二、内容与设计思想
 
-两个问题：
+1. 编程实现普通的矩阵乘法；
 
-- 人为什么活着？
-- 人生的意义是什么？
+2. 编程实现 Strassen’s algorithm；
 
-## 重要人物
+3. 在不同数据规模情况下（数据规模 N=2^3, 2^5, 2^7, 2^9）下，比较两种算法的运行时间各是多少；
 
-- 苏格拉底
-    - 雅典
-    - 西方人的「至圣先师」，类比中国的孔子
-    - 一辈子做得最多的事就是问问题，不打击会死星人
+4. 修改 Strassen’s algorithm，使之适应矩阵规模 N 不是 2 的幂的情况；
 
-- 柏拉图
-    - 雅典
-    - 苏格拉底的学生
-    - 重视心灵理性
+5. 改进后的算法与 2 中的算法在相同数据规模下进行比较。
 
+为便于同学操作，我们设置了课程编程题在 [oj | 《算法设计与分析》第二次实验课](http://47.100.233.213/contest/84)，同学可以提交算法代码到这个平台去计算和比较时间。
 
-- 亚里士多德
-    - 马其顿王国、亚历山大帝国
-    - 柏拉图的学生<br>亚历山大的老师
-    - 重视现实经验
-    - 「吾爱吾师，吾更爱真理。」
+注意 1：==每组样例有对应的执行次数，如果需要得到单次时间，要除以重复数。==
 
-- 保罗
-    - 罗马帝国
-    - 和耶稣处于同一时代
-    - 从犹太教皈依基督教
-    - 利用希腊哲学作为传教的武器，完善了基督教的理论基础<br>《保罗书信》成为《新约》的重要组成部分
+注意 2：==由于平台的缘故，可能会有 30ms 的波动；解决办法是多提交几次（比如 5 此）取平均数。==
 
-- 奥古斯丁
-    - 教父哲学家<br>基督教历史上重要的圣贤
-    - 贡献之一，解决了一个长久困扰基督教的逻辑漏洞：
-        - Q:《圣经》说上帝是全知、全能和全善的，那为什么会允许人间存在那么多丑恶和痛苦？我们知道，《圣经》里说亚当和夏娃偷吃了禁果，所以被逐出伊甸园，人类才会开始无尽地受苦。上帝既然知道亚当和夏娃会偷吃禁果，为什么一开始不去阻止他们？
-        - A: 关键在于自由。上帝给了亚当夏娃和人类自由意志，所以也必须让人类有作恶的可能。
+## 三、使用环境
 
-- 阿奎纳
-    - 经院哲学的高峰
-    - 提出了五个方法来证明上帝的存在。比如一个最简单的概括：<br>世上万事万物都要有另一个事物作为它的原因，那么必然存在一个最初的原因，这个原因就是上帝。
+推荐使用 C/C++集成编译环境。
 
-- 马丁.路德
-    - 神圣罗马帝国（今德国）
-    - 得益于造纸术、印刷术，以哲学为武器反抗罗马教廷，最终基督教分裂成天主教（罗马）、新教（路德）、东正教（东罗马帝国）
+考虑到本文档是 markdown 文档，强烈建议使用 [Typora](https://typora.io/) 可视化编辑。并且使用 VS Code 中的，[Prettier](https://prettier.io/) 插件精致地格式化本文档。
 
-- 笛卡尔
-    - 荷兰
-    - 数学派哲学家（理性主义，推理演绎）
-    - 亲自思考世界，读「世界这本大书」。我的知识不在先贤的书里，而是在实践检验里。
-    - 我眼前的这个世界是不是都是假的？我见到的一切会不会都是幻觉、都是梦境？「我思故我在」，二元论（心灵与外界，相互独立、平等，虽可以相互影响，但谁也不能完全决定另一个）<br>意识到可以将欧氏几何的演绎推理方法应用到哲学上来，基于一些不言自明的公设，推导出整个哲学世界。
-    - 「不管多么荒谬、多么不可置信的事，无一不是这个或那个哲学家主张过的。」
+## 四、实验过程
 
-- 斯宾诺莎
-    - 荷兰
-    - 笛卡尔的继承者
-    - 生活困苦的哲学家，关注个人幸福。自己的幸福应该通过理性思考来追求，在未得出最终答案之前如何生活？<br>一、说话尽量让别人明白，只要别人的要求不会影响我们实现自己的目标，尽量满足；<br>二、只享受为保持健康所必须的生活乐趣；<br>三、只求取为生活和健康所必需的金钱；
-    - 实现了笛卡尔设想的按照欧氏几何学的模式来建立哲学体系。<br>最有影响力的著作：《按几何顺序证明的伦理学》
+1. #### _**写出源代码**_
 
-- 洛克
-    - 英国
-    - 科学派哲学家（经验主义，归纳法）
-    - 无根之木——科学派对数学派的攻击非常准确。<br>科学派的弱点：没法保证结论的可靠性。<br>白板说：人的经验是从后天的客观世界而来。
+   ##### 当规模为2的幂的情况
 
-- 莱布尼茨
-    - 德国
-    - 数学派哲学家（理性主义，推理演绎）
-    - 与洛克辩论的书信：《人类理智新论》。<br>单子论：物质是占据空间的，只要是能占据空间的东西就可以被分成更小的东西，无限分之后，剩下的是不占据空间的「东西」（精神，非物质，起名单子）。<br>和牛顿各自独立发明微积分。
-    - 「世上没有两片树叶是相同的。」
+   **普通算法：**
 
-- 牛顿
-    - 英国
-    - 物理学家<br>数学家<br>天文学家<br>哲学家（偏经验主义，机械论）<br>神学家<br>炼金术士
-    - 为机械论打下基础。<br>机械论/机械唯物主义：用物理学、数学公式来解释包括人类意识在内的整个世界。
+   ```c++
+   #include <iostream>
+   using namespace std;
+   
+   void jv(int M)
+   {
+       int c[M][M];
+       int a[513][513];
+       int b[513][513];
+       //vector<vector<int>> a(m, vector<int>(m));
+       //vector<vector<int>> b(m, vector<int>(m));
+       int i, j;
+       ios::sync_with_stdio(false); //关同步，提高cin / cout效率
+       for (i = 0; i < M; i++)
+       {
+           for (j = 0; j < M; j++)
+           {
+               cin >> a[i][j];
+           }
+       }
+       for (i = 0; i < M; i++)
+       {
+           for (j = 0; j < M; j++)
+           {
+               cin >> b[i][j];
+           }
+       }
+       for (int i = 0; i < M; i++)
+       {
+           for (int j = 0; j < M; j++)
+           {
+               c[i][j] = 0;
+           }
+       }
+   
+       for (int i = 0; i < M; i++)
+       {
+           for (int j = 0; j < M; j++)
+           {
+               for (int k = 0; k < M; k++)
+               {
+                   c[i][j] = c[i][j] + (a[i][k] * b[k][j]);
+               }
+           }
+       }
+   
+       for (int i = 0; i < M; i++)
+       {
+           cout << c[i][0];
+           for (int j = 1; j < M; j++)
+           {
+               cout << " " << c[i][j];
+           }
+           cout << endl;
+       }
+   }
+   
+   int main()
+   {
+       int M; //数组大小
+       int N; //有多少对
+       int i, j;
+       ios::sync_with_stdio(false); //关同步，提高cin / cout效率
+       cin >> N;
+       cin >> M;
+       for (i = 0; i < N; i++)
+       {
+           jv(M);
+       }
+       return 0;
+   }
+   
+   ```
 
-- 霍布斯
-    - 英国
-    - 机械论的急先锋。
-    - 机械论很容易推导出虚无主义、享乐主义，还有<br>决定论：既然世间万物都可以用物理规律来解释，那么每一事件之间必然要遵循严格的因果关系。如果人的意识是完全由物质决定的，那肯定也得服从严格的物理定律。那么，整个世界该如何发展，该走向何处，都是由自然定律决定好了的。（一旦接受这个设定，就意味着人类没有了自由的意志。）
+   
 
-- 休谟
-    - 英国
-    - 业余哲学家（偏经验主义）
-    - 挑战机械论和整个科学界。动摇科学和哲学的根基。<br>理性主义属于独断论，经验主义又不能证明事物之间存在因果关系。<br>只有两类知识是可靠的：一类是像逻辑和几何那样，既逻辑严谨又不依赖于外物存在的知识；一类是我们感官体验到的知识。<br>再多的偶然观测也不能得出必然的结论。
-    - 「你怎么知道明天的太阳会照样升起？」
+   
 
-- 康德
-    - 德国
-    - 《纯粹理性批判》<br> 人类感觉到的世界，也就是「物自体」（世界的真面目）经过「先天认识形式」（人类心灵中的某个特殊的机制）加工后得到的东西，我们叫做「表象」。<br>把世界分成了两个部分。一个部分完全不可知，另一个部分则可以用更改把握。不可知的那部分因为永远不可知，所以对我们的生活没有什么影响。只要我们在可把握的世界里生活，理性就又恢复了威力。
+   **Strassen算法**
 
+   ```c++
+   #include <iostream>
+   using namespace std;
+   
+   //矩阵相加
+   void Add(int **A, int **B, int **C, int M)
+   {
+       for (int i = 0; i < M; i++)
+       {
+           for (int j = 0; j < M; j++)
+           {
+               C[i][j] = A[i][j] + B[i][j];
+           }
+       }
+   }
+   
+   //矩阵相减
+   void Sub(int **A, int **B, int **C, int M)
+   {
+       for (int i = 0; i < M; i++)
+       {
+           for (int j = 0; j < M; j++)
+           {
+               C[i][j] = A[i][j] - B[i][j];
+           }
+       }
+   }
+   
+   //普通矩阵的算法
+   void normal(int **A, int **B, int **C, int M )
+   {
+       for ( int i = 0; i < M; i++)
+       {
+           for ( int j = 0; j < M; j++)
+           {
+               C[i][j]=0;
+               for(int k = 0; k < M; k++)
+               C[i][j]+= A[i][k]*B[k][j];
+           }
+       }
+   }
+   
+   //strassen算法
+   int Strassen(int **A, int **B, int **Result, int M)
+   {
+      if (M <= 32)
+       {
+          normal(A,B,Result,M);
+          return 0;
+       }
+       
+       int NewSize = M / 2;
+       /*分块矩阵*/
+       int **A11, **A12, **A21, **A22;
+       int **B11, **B12, **B21, **B22;
+       int **C11, **C12, **C21, **C22;
+       int **P1, **P2, **P3, **P4, **P5, **P6, **P7;
+       /*存放数组A、B（i、j）的临时变量*/
+       int **AResult, **BResult;
+   
+       A11 = new int *[NewSize];
+       A12 = new int *[NewSize];
+       A21 = new int *[NewSize];
+       A22 = new int *[NewSize];
+   
+       B11 = new int *[NewSize];
+       B12 = new int *[NewSize];
+       B21 = new int *[NewSize];
+       B22 = new int *[NewSize];
+   
+       C11 = new int *[NewSize];
+       C12 = new int *[NewSize];
+       C21 = new int *[NewSize];
+       C22 = new int *[NewSize];
+   
+       P1 = new int *[NewSize];
+       P2 = new int *[NewSize];
+       P3 = new int *[NewSize];
+       P4 = new int *[NewSize];
+       P5 = new int *[NewSize];
+       P6 = new int *[NewSize];
+       P7 = new int *[NewSize];
+   
+       AResult = new int *[NewSize];
+       BResult = new int *[NewSize];
+   
+       for (int i = 0; i < NewSize; i++)
+       {
+           A11[i] = new int[NewSize];
+           A12[i] = new int[NewSize];
+           A21[i] = new int[NewSize];
+           A22[i] = new int[NewSize];
+   
+           B11[i] = new int[NewSize];
+           B12[i] = new int[NewSize];
+           B21[i] = new int[NewSize];
+           B22[i] = new int[NewSize];
+   
+           C11[i] = new int[NewSize];
+           C12[i] = new int[NewSize];
+           C21[i] = new int[NewSize];
+           C22[i] = new int[NewSize];
+   
+           P1[i] = new int[NewSize];
+           P2[i] = new int[NewSize];
+           P3[i] = new int[NewSize];
+           P4[i] = new int[NewSize];
+           P5[i] = new int[NewSize];
+           P6[i] = new int[NewSize];
+           P7[i] = new int[NewSize];
+   
+           AResult[i] = new int[NewSize];
+           BResult[i] = new int[NewSize];
+       }
+   
+       //对分块矩阵赋值
+       for (int i = 0; i < NewSize; i++)
+       {
+           for (int j = 0; j < NewSize; j++)
+   
+           {
+               A11[i][j] = A[i][j];
+               A12[i][j] = A[i][j + NewSize];
+               A21[i][j] = A[i + NewSize][j];
+               A22[i][j] = A[i + NewSize][j + NewSize];
+   
+               B11[i][j] = B[i][j];
+               B12[i][j] = B[i][j + NewSize];
+               B21[i][j] = B[i + NewSize][j];
+               B22[i][j] = B[i + NewSize][j + NewSize];
+           }
+       }
+   
+       //计算P1 = A11*(B12-B22)
+       Sub(B12, B22, BResult, NewSize);
+       Strassen(A11, BResult, P1, NewSize);
+   
+       //计算P2 = (A11+A12)*B22
+       Add(A11, A12, AResult, NewSize);
+       Strassen(AResult, B22, P2, NewSize);
+   
+       //计算P3 = (A21+A22)*B11
+       Add(A21, A22, AResult, NewSize);
+       Strassen(AResult, B11, P3, NewSize);
+   
+       //计算P4 = A22*(B21-B11)
+       Sub(B21, B11, BResult, NewSize);
+       Strassen(A22, BResult, P4, NewSize);
+   
+       //计算P5 = (A11+A22)*(B11+B22)
+       Add(A11, A22, AResult, NewSize);
+       Add(B11, B22, BResult, NewSize);
+       Strassen(AResult, BResult, P5, NewSize);
+   
+       //计算P6 = (A12-A22)*(B21+B22)
+       Sub(A12, A22, AResult, NewSize);
+       Add(B21, B22, BResult, NewSize);
+       Strassen(AResult, BResult, P6, NewSize);
+   
+       //计算P7 = (A11-A21)*(B11+B12)
+       Sub(A11, A21, AResult, NewSize);
+       Add(B11, B12, BResult, NewSize);
+       Strassen(AResult, BResult, P7, NewSize);
+   
+       //计算C11，C12，C21，C22
+       //C11 = P5 + P4 - P2 + P6;
+       Add(P5, P4, AResult, NewSize);
+       Sub(AResult, P2, BResult, NewSize);
+       Add(BResult, P6, C11, NewSize);
+   
+       //C12=P1+P2
+       Add(P1, P2, C12, NewSize);
+   
+       //C21=P3+P4
+       Add(P3, P4, C21, NewSize);
+   
+       //C22=P5+P1-P3-P7
+       Add(P5, P1, C22, NewSize);
+       Sub(C22, P3, C22, NewSize);
+       Sub(C22, P7, C22, NewSize);
+   
+       //合并C11，C12，C21，C22
+       for (int i = 0; i < NewSize; i++)
+       {
+           for (int j = 0; j < NewSize; j++)
+           {
+               Result[i][j] = C11[i][j];
+               Result[i][j + NewSize] = C12[i][j];
+               Result[i + NewSize][j] = C21[i][j];
+               Result[i + NewSize][j + NewSize] = C22[i][j];
+           }
+       }
+   
+       //删除数组，回收资源
+       for (int i = 0; i < NewSize; i++)
+       {
+           delete[] A11[i];
+           delete[] A12[i];
+           delete[] A21[i];
+           delete[] A22[i];
+           delete[] B11[i];
+           delete[] B12[i];
+           delete[] B21[i];
+           delete[] B22[i];
+           delete[] C11[i];
+           delete[] C12[i];
+           delete[] C21[i];
+           delete[] C22[i];
+           delete[] P1[i];
+           delete[] P2[i];
+           delete[] P3[i];
+           delete[] P4[i];
+           delete[] P5[i];
+           delete[] P6[i];
+           delete[] P7[i];
+           delete[] AResult[i];
+           delete[] BResult[i];
+       }
+       delete[] A11;
+       delete[] A12;
+       delete[] A21;
+       delete[] A22;
+       delete[] B11;
+       delete[] B12;
+       delete[] B21;
+       delete[] B22;
+       delete[] C11;
+       delete[] C12;
+       delete[] C21;
+       delete[] C22;
+       delete[] P1;
+       delete[] P2;
+       delete[] P3;
+       delete[] P4;
+       delete[] P5;
+       delete[] P6;
+       delete[] P7;
+       delete[] AResult;
+       delete[] BResult;
+       return 0;
+   }
+   
+   int main()
+   {
+       ios::sync_with_stdio(false); //关同步，提高cin / cout效率
+       int N, M;
+       cin >> N >> M;
+       int **A, **B, **C;
+       //动态申请二维数组
+       A = new int *[M];
+       B = new int *[M];
+       C = new int *[M];
+       for (int i = 0; i < M; i++)
+       {
+           A[i] = new int[M];
+           B[i] = new int[M];
+           C[i] = new int[M];
+       }
+   
+       
+   
+       for (int i = 0; i < N; i++)
+       {
+           for (int i = 0; i < M; i++)
+           { //输入矩阵A
+           for (int j = 0; j < M; j++)
+           {
+               cin >> A[i][j];
+           }
+           }
+      
+           for (int i = 0; i < M; i++)
+           { //输入矩阵A
+           for (int j = 0; j < M; j++)
+           {
+               cin >> B[i][j];
+           }
+           }   
+           Strassen(A, B, C, M);
+   
+           for (int i = 0; i < M; i++)
+           {
+               cout<<C[i][0];
+               for (int j = 1; j < M; j++)
+               {
+                   cout << " " << C[i][j];
+               }
+               cout << endl;
+           }
+           
+       }
+       for (int i = 0; i < M; i++)
+           {
+               delete[] A[i];
+               delete[] B[i];
+               delete[] C[i];
+           }
+           delete[] A;
+           delete[] B;
+           delete[] C;
+       return 0;
+   }
+   ```
 
-- 黑格尔
-    - 德国
-    - 形而上学的巅峰
-    - 辩证法。<br>理性经过不断的辩证，就可以完全符合客观世界的真实面貌。<br>绝对精神不是静止不动的一个东西，而是整个历史在不断运动的这个过程本身，这个「运动过程」才是终极真理。
+   
 
-- 叔本华
-    - 悲观主义者
-    - 康德思想的继承者<br>讨厌黑格尔
-    - 《作为意志和表象的世界》<br>宇宙中万事万物背后都有生命意志在驱动。<br>生命意志是邪恶的，是痛苦的源泉。<br>满足欲望会带来快乐，但欲望本质上是痛苦之源。满足不了欲望，人会痛苦。满足了欲望，人又会产生新的、更高的欲望，还是会痛苦。
+   #### **当规模不是N的二次方时**
 
-- 尼采
-    - 德国
-    - 叔本华的崇拜者<br>讨厌黑格尔
-    - 世界观带有强烈的激情，觉得应该承认痛苦，迎战痛苦。<br>精英主义：把人分为强者和弱者，道德分为贵族道德和奴隶道德。推崇强者，大部分强都都被奴隶道德压抑着。
-    - 将叔本华理论里的「生命意志」改造成「权力意志」，权力意志是征服的意志，在权力意志的驱使下，人类去研究世界不是为了简单地求知，而是为了能更好地控制世界。
-    - 「上帝死了。」
+   普通算法和上面一样
 
-- 克尔凯郭尔
-    - 讨厌黑格尔
-    - 强调个人的选择。反对用理性研究宗教。
-    - 揭示了形而上学和自由意志的矛盾。
+   Strassen算法——只有主函数不同，其他完全一样（所以只贴了主函数代码）
 
-- 罗素
-    - 英国
-    - 逻辑实证主义
-    - 《数学原理》<br>逻辑实证主义：用严格符合逻辑的语言来进行哲学研究与表达（如逻辑符号）。
-    - 「三种单纯又极其强烈的激情支配着我的一生：对爱情的渴望，对知识的追求，以及对于人类苦难的不可遏制的同情。」<br>「须知参差多态，乃是幸福本源。」
+   最简单的想法就是——将矩阵补全为一个2次幂的矩阵，其他地方补为0
 
-- 维特根斯坦
-    - 奥地利
-    - 罗素学生
-    - 《逻辑哲学论》<br>绝对的更改得不到任何有意义的结论，理论思维和现实之间的矛盾，更改无法担负从总体上解释世界、指导生活的任务。
-    - 「凡是可说的事情，都可以说清楚，凡是不可说的事情，我们必须保持沉默。」<br>「人生问题的解答在于对这个问题的消除。」
+   ```c++
+   int main()
+   {
+       ios::sync_with_stdio(false); //关同步，提高cin / cout效率
+       int N, M;
+       cin >> N >> M;
+       int **A, **B, **C;
+       //动态申请二维数组
+       A = new int *[512];
+       B = new int *[512];
+       C = new int *[512];
+       for (int i = 0; i < 512; i++)
+       {
+           A[i] = new int[512];
+           B[i] = new int[512];
+           C[i] = new int[512];
+       }
+   
+       for (int i = 0; i < N; i++)
+       {
+           for (int i = 0; i < M; i++)
+           { //输入矩阵A
+               for (int j = 0; j < M; j++)
+               {
+                   cin >> A[i][j];
+               }
+           }
+   
+           for (int i = 0; i < M; i++)
+           { //输入矩阵A
+               for (int j = 0; j < M; j++)
+               {
+                   cin >> B[i][j];
+               }
+           }
+   
+           //当测试M为非二次幂时，执行以上步骤，通过添加0，将矩阵大小变为二次幂
+           int cnt, item;
+           cnt = 0;
+           item = M;
+           while (pow(2, cnt) < M)
+           {
+               cnt++;
+               //cout<<cnt<<endl;
+           }
+           cnt = pow(2, cnt);
+           //cout<<cnt;
+           for (int i = item; i < cnt; i++)
+           {
+               for (int j = 0; j < cnt; j++)
+               {
+                   A[i][j] = 0;
+                   B[i][j] = 0;
+               }
+           }
+           for (int j = item; j < cnt; j++)
+           {
+               for (int i = 0; i < cnt; i++)
+               {
+                   A[i][j] = 0;
+                   B[i][j] = 0;
+               }
+           }
+   
+           Strassen(A, B, C, cnt);
+   
+           for (int i = 0; i < M; i++)
+           {
+               cout << C[i][0];
+               for (int j = 1; j < M; j++)
+               {
+                   cout << " " << C[i][j];
+               }
+               cout << endl;
+           }
+       }
+       for (int i = 0; i < M; i++)
+       {
+           delete[] A[i];
+           delete[] B[i];
+           delete[] C[i];
+       }
+       delete[] A;
+       delete[] B;
+       delete[] C;
+       return 0;
+   }
+   ```
 
-- 波普尔
-    - 奥地利
-    - 证伪主义<br>提出 一个检验科学理论的重要标准：证伪。科学理论必须能提出一个可供证伪的事实，假如这个事实一经验证，便承认该理论是错的。如果暂时没有人能证明它是错的，那它暂时就是对的。<br>终结形而上学：凡是终极真理，都是毫无意义的命题，不值一提。
+   
 
-## 其它
+2. _分别画出各个实验结果的折线图_
 
-实用主义
+   ***规模为2的幂时的情况***
 
-- 哲学也得像科学这样，不再说空话，不再讨论空泛的大部分，而是重视哲学的实用性。
-- 「黑猫白猫，能抓住老鼠就是好猫。」
+   <img src="https://github.com/Jiapang777777/Jiapang777777.github.io/tree/master/images/blog/截屏2023-04-29 19.21.04.png" style="zoom:60%;" />
 
-## 摘录
+   | 数据规模 | nomal  algorithm (t/ms) | Strassen’s  algorithm (t/ms) |
+   | :------: | :---------------------: | :--------------------------: |
+   |   2^3    |          0.016          |            0.017             |
+   |   2^5    |          0.299          |            0.308             |
+   |   2^7    |          6.828          |            6.319             |
+   |   2^9    |           195           |            156.25            |
 
-1. 对人伤害最大的其实不是一时的痛苦，而是对未来痛苦的恐惧。这就像打针对于孩子来说，可怕的地方在于排队，在于来苏水味、叮叮当当的针管及胳膊上的凉意。真正的肉体疼痛与此相比微不足道。我们怕穷，并不是因为我们不能忍受粗糙的吃穿，而是因为不愿意整日生活在对贫穷的恐惧和屈辱中。我们不愿意忍受的是那种担惊受怕的状态。
-所以，在面对痛苦的时候，我们应该把自己的感受局限在此时一瞬，而不要顾及那些未到的痛苦。
-2. 「先验」和「先天」差不多。意思是，先于经验，说某些东西是在人获取经验之前就存在的。
-3. 我们追求个人幸福的最高境界，不是纵欲，而是内心的平静。
-4. 休谟说，无论我们过去看到多少重复发生的事件，我们也不能断言这事件在未来一定会再次发生。
-5. 实际上，马克思当年为了维护工人阶级利益提出的很多要求，大部分都被资本主义国家接受并且实现了。如今这种改良式的资本主义在西方颇受欢迎，这可以让我们看到实用主义在西方的用处。
-6. 当人意识到人生没有目的的时候，对目的的本能渴望和没有目的的现实就会发生强烈的冲突，让人产生荒谬感。
-7. 用西西弗的比喻来说，我们只能在推石头的时候哄自己说这么做是有意义的，并且乐在其中。这个哄骗自己的借口，就是人生意义。
+   ------
 
-## 对开篇两个问题的回应
+   这里改进主要是指对Strassen算法的优化
 
-这两个问题，其实可以认为是一个问题。
+   <img src="https://github.com/Jiapang777777/Jiapang777777.github.io/tree/master/images/blog/截屏2023-04-29 19.21.08.png" style="zoom:60%;" />
 
-很多人终其一生都在苦苦追寻这个问题的答案，如果有标准答案，那不知道是人类的幸还是不幸。
+   
 
-上面摘录中有一句话：
+   | 数据规模 | 改进前 | 改进后 |
+   | :------: | :----: | :----: |
+   |   2^3    | 0.106  | 0.017  |
+   |   2^5    | 1.911  | 0.318  |
+   |   2^7    | 30.875 | 6.319  |
+   |   2^9    | 493.75 | 156.25 |
 
-> 用西西弗的比喻来说，我们只能在推石头的时候哄自己说这么做是有意义的，并且乐在其中。这个哄骗自己的借口，就是人生意义。 
+   ------
 
-书的最后一章里还给了一个方法，就是问自己一个问题：你为什么不自杀？你的回答就是你现在的人生意义。
+   
 
-## 一点小感想
+   ***当规模不为2的幂时的情况***
 
-也许一些比较古早的哲学家的思想与观点，在今天看来甚至有些可笑，但一切都要结合历史的进程来看，宗教、商业、科学、哲学经过漫长的发展才成了现在的样子，这些哲人在他们所处的年代就已经是最顶尖的思考者，我们只不过是站在巨人的肩膀上罢了。在历史的长河中未来的某个时间点，回过头来审视我们这个时代的思想，也很可能会感觉到巨大的局限性。
+   <img src="https://github.com/Jiapang777777/Jiapang777777.github.io/tree/master/images/blog/截屏2023-04-29 19.21.17.png"  style="zoom:60%;" />
 
-## 书籍推荐
+   | 数据规模 | nomal  algorithm (t/ms) | Strassen’s  algorithm (t/ms) |
+   | :------: | :---------------------: | :--------------------------: |
+   |   2^3    |          0.022          |            0.021             |
+   |   2^5    |          0.299          |            0.332             |
+   |   2^7    |          6.783          |            6.344             |
+   |   250    |         35.125          |            33.75             |
+   |   500    |         188.25          |             170              |
+   |   2^9    |           195           |            160.75            |
 
-- 《西方哲学史》——罗素，上下卷
+   
 
-## 参考
+## 五、总结
 
-- [关键人物梳理（哲学家们都干了些什么？）书评](https://book.douban.com/review/6538160/)
+​        先说一下关于strassen算法优化的过程，一开始我递归程序的出口是，当M==1时，直接相乘，这样带来的问题是，时间严重超时，可能是递归了太多次，造成了不必要的开销，所有这些内存分配和复制都会减少算术运算的收益。而且虽然Strassen算法的复杂度较小,但它具有更大的Big-O常数？于是乎，立马开动小脑袋瓜进行优化，优化的方法则是，在strassen所分的矩阵都用普通算法，但这样还是很慢；于是又改成当M小于32时，便用普通算法进行计算，这样就快很多了。
+
+​       所以因为我对strassen算法的设计，在第一个图里可以看出，当规模小于32时，两者运行时间基本一致，但随着规模增大，明显可以看出strassen算法是优于普通算法的。由理论知识可得：普通算法的时间复杂度为O(n^3),而strassen算法约为O(n^2.81)。故实验结果是符合的。
+
+​       当规模不是2的N次幂时，一个很简单的想法就是，把矩阵补全成为2的幂次规模即可。这是因为矩阵的性质可得，就算扩大矩阵（补0），也会保留原有的结果，而添加的那部分为0，最后只输出M*M规模矩阵即可。但这样有一个问题在于，可能会增加很大消耗，我在网上看到了一个优化的办法是，每次递归时将奇数补一行为偶数即可，但我写成这样试了一下，发现并没有很大的提升。
+
+​        关于第三个图的解释：在非2次幂下，strassen算法还是优于普通算法的，而在strassen算法下，规模为512的数据时间是小于500的，我认为是因为当为500时，有一个补充矩阵的操作（但我认为两者应该差不多才对），还可能是因为误差？
+
+建议：感觉这次题目的要求不是很清晰，比如画图那里，改进前后算法比较，不懂这里指的是优化前后，还是改为适合非二次幂前后。（也可能是因为我自己没理解好）
+
+​        
+
+## **六、水杉id**
+
+10205501403刘佳凡
