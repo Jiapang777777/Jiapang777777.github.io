@@ -1,7 +1,6 @@
 ---
 layout: post
 title: Strassen’s algorithm
-categories: [Blog]
 description: Strassen算法优化报告
 keywords: Strassen’s algorithm，优化
 ---
