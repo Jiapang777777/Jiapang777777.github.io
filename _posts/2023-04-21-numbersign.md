@@ -1,7 +1,6 @@
 ---
 layout: post
 title: C++ 中的#，##，和"
-categories: CPlusPlus
 description: 宏的常用用法。
 keywords: 宏，C++
 ---
