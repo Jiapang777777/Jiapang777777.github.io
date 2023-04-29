@@ -1,18 +1,18 @@
 ---
 layout: page
 title: About
-description: 打码改变世界
-keywords: Zhuang Ma, 马壮
+description: 个人介绍
+keywords: Liu Jiafan
 comments: true
 menu: 关于
 permalink: /about/
 ---
 
-我是马壮，码而生，码而立。
+欢迎👏大家来看我的博客
 
-仰慕「优雅编码的艺术」。
+我是来着ECNU大三的一名学生 平时超级超级喜欢拍照和美食哈哈哈哈
 
-坚信熟能生巧，努力改变人生。
+如果博客中有任何的问题 欢迎大家联系我并指出哦 
 
 ## 联系
 
@@ -21,21 +21,5 @@ permalink: /about/
 <li>{{website.sitename }}：<a href="{{ website.url }}" target="_blank">@{{ website.name }}</a></li>
 {% endfor %}
 {% if site.url contains 'mazhuang.org' %}
-<li>
-微信公众号：<br />
-<img style="height:192px;width:192px;border:1px solid lightgrey;" src="{{ site.url }}/assets/images/qrcode.jpg" alt="闷骚的程序员" />
-</li>
 {% endif %}
 </ul>
-
-
-## Skill Keywords
-
-{% for skill in site.data.skills %}
-### {{ skill.name }}
-<div class="btn-inline">
-{% for keyword in skill.keywords %}
-<button class="btn btn-outline" type="button">{{ keyword }}</button>
-{% endfor %}
-</div>
-{% endfor %}
