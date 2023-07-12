@@ -33,7 +33,7 @@ components:
     # My Popular Repositories
     side_bar_repo:
         enabled: true
-        limit: 5
+        limit: 3
     # 文章字数统计
     word_count:
         enabled: true
