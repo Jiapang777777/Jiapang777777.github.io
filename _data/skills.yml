@@ -1,19 +1,18 @@
-- name: Software Engineer Keywords
+- name: 个人技能
   keywords:
-      - Java
+      - C
       - C++
       - Python
-      - Design Patterns
 
-- name: Mobile Developer Keywords
+- name: 兴趣爱好
   keywords:
-      - Android
-      - Reverse Engineering
+      - 摄影
+      - 美食
+      - 运动
 
-- name: Windows Developer Keywords
+- name: 笔记分类
   keywords:
-      - Win32 SDK
-      - DuiLib
-      - WTL
-      - COM
-      - WinDbg
+      - 操作系统
+      - 数据伦理
+      - 数据结构
+      - C & C++
