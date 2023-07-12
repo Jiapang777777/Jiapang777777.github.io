@@ -40,3 +40,13 @@ permalink: /about/
 {% if site.url contains 'mazhuang.org' %}
 {% endif %}
 </ul>
+
+## Skill Keywords
+
+{% for skill in site.data.skills %}
+
+### {{ skill.name }}
+
+{% for keyword in skill.keywords %} {{ keyword }} {% endfor %}
+
+{% endfor %}
