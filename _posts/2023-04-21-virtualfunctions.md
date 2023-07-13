@@ -3,6 +3,7 @@ layout: post
 title: 对象内存结构及虚函数表分析
 description: C++ 对象结构模型与虚函数表的实例解析。
 keywords: C++
+categories: c++
 ---
 
 C++ 对象结构模型与虚函数表的实例解析
