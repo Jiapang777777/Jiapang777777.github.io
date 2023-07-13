@@ -2,6 +2,7 @@
 layout: post
 title: 用 Vim 编辑 Markdown 时直接粘贴图片
 keywords: Vim, Markdown, md-image-paste.vim
+categories: 技术分享
 ---
 
 用Vim编辑MD文件，一直存在一个痛点就是粘贴图片很不方便。
