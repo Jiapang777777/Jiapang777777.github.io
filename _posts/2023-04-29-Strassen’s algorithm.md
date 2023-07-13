@@ -3,6 +3,7 @@ layout: post
 title: Strassen’s algorithm
 description: Strassen算法优化报告
 keywords: Strassen’s algorithm，优化
+categories: 数据结构与算法
 ---
 # 上机实践报告
 
