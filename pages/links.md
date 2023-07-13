@@ -6,7 +6,7 @@ menu: 链接
 permalink: /links/
 ---
 
-> God made relatives. Thank God we can choose our friends.
+> 一些开源项目展示
 
 <ul>
 {% for link in site.data.links %}
